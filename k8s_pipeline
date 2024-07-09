@@ -34,16 +34,28 @@ pipeline {
             }
         }
          stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    kubernetesDeploy(
-                        configs: 'k8s_onepod.yaml',
-                        kubeconfigId: 'kubeconfig-credentials-id'
-                    )
-                    def k8s = new io.fabric8.kubernetes.client.DefaultKubernetesClient()
-                    def pod = k8s.pods().load(new File('/var/lib/jenkins/workspace/pipeline/k8s_onepod.yaml')).get()
-                    k8s.pods().createOrReplace(pod)
-                }
+    steps {
+        script {
+            // Initialize Kubernetes client
+            def k8s = new io.fabric8.kubernetes.client.DefaultKubernetesClient()
+            echo "Kubernetes client initialized"
+            
+            try {
+                // Read YAML content from file
+                def yamlContent = readFile('k8s_onepod.yaml')
+                
+                // Load YAML content into Kubernetes object
+                def pod = k8s.load(yamlContent).get()
+                echo "Pod object loaded from YAML: ${pod}"
+                
+                // Create or replace the Pod in Kubernetes
+                k8s.pods().createOrReplace(pod)
+                echo "Pod created/replaced successfully"
+                
+            } finally {
+                // Close Kubernetes client
+                k8s.close()
+                echo "Kubernetes client closed"
             }
         }
     }
