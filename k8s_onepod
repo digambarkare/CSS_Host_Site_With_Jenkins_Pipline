@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: css_temp
-        image: shan20000/devops-full-stack:my-backend-test-12
+        image: shan20000/angular:Frontend-pipeline
         ports:
         - containerPort: 80
 ---
