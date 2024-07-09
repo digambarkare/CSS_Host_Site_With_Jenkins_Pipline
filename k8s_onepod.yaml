@@ -37,7 +37,7 @@ spec:
         app: css
     spec:
       containers:
-      - name: css_temp
+      - name: css
         image: shan20000/angular:Frontend-pipeline
         ports:
         - containerPort: 80
@@ -48,7 +48,7 @@ metadata:
   name: css-service
 spec:
   selector:
-    app: backend
+    app: css # This should match the labels in the deployment
   ports:
   - protocol: TCP
     port: 80
