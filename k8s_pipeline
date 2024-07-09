@@ -39,6 +39,7 @@ pipeline {
                     kubernetesDeploy(
                         configs: 'k8s_onepod.yaml',
                         kubeconfigId: 'kubeconfig-credentials-id'
+                        sh 'kubectl apply -f k8s_onepod.yaml'
                     )
                 }
             }
