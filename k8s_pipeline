@@ -33,24 +33,13 @@ pipeline {
                 }
             }
         }
-
-        stage('Pull Docker Image from DockerHub') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials-id') {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_TAG}").pull()
-                    }
-                }
-            }
-        }
-
         stage('Deploy to Kubernetes') {
+            environment {
+                kubeconfigId = 'kubeconfig-credentials-id'
+            }
             steps {
                 script {
-                    kubernetesDeploy(
-                        configs: 'k8s-onepod.yaml',
-                        kubeconfigId: 'kubeconfig-credentials-id'
-                    )
+                    kubernetesDeploy( configs: "k8s-onepod.yaml", kubeconfigId )
                 }
             }
         }
