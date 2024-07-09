@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     kubernetesDeploy(
-                        configs: 'k8s-onepod.yaml',
+                        configs: 'k8s_onepod.yaml',
                         kubeconfigId: 'kubeconfig-credentials-id'
                     )
                 }
