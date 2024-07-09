@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_REPO = 'shan20000/angular'
-        BUILD_TAG    = "Frontend-pipeline"
+        BUILD_TAG = "Frontend-pipeline"
     }
 
     stages {
@@ -22,13 +22,13 @@ pipeline {
         }
 
         stage('Push Docker Image') {
+            environment {
+                registryCredential = 'dockerhub-credentials-id'
+            }
             steps {
-                environment {
-                        registryCredential = 'dockerhub-credentials-id'
-                }
                 script {
-                    docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-                        dockerImage.push("${env.BUILD_TAG}")
+                    docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_TAG}").push()
                     }
                 }
             }
@@ -37,7 +37,7 @@ pipeline {
         stage('Pull Docker Image from DockerHub') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', credentials('dockerhub-credentials-id')) {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials-id') {
                         docker.image("${DOCKERHUB_REPO}:${env.BUILD_TAG}").pull()
                     }
                 }
@@ -47,7 +47,10 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    kubernetesDeploy(configs: "k8s-onepod.yaml", kubeconfigId: 'kubeconfig-credentials-id')
+                    kubernetesDeploy(
+                        configs: 'k8s-onepod.yaml',
+                        kubeconfigId: 'kubeconfig-credentials-id'
+                    )
                 }
             }
         }
