@@ -40,6 +40,9 @@ pipeline {
                         configs: 'k8s_onepod.yaml',
                         kubeconfigId: 'kubeconfig-credentials-id'
                     )
+                    def k8s = new io.fabric8.kubernetes.client.DefaultKubernetesClient()
+                    def pod = k8s.pods().load(new File('/var/lib/jenkins/workspace/pipeline/k8s_onepod.yaml')).get()
+                    k8s.pods().createOrReplace(pod)
                 }
             }
         }
