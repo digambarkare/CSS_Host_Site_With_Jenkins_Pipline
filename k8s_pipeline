@@ -23,9 +23,12 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
+                environment {
+                        registryCredential = 'dockerhub-credentials-id'
+                }
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', credentials('dockerhub-credentials-id')) {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_TAG}").push()
+                    docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+                        dockerImage.push("${env.BUILD_TAG}")
                     }
                 }
             }
