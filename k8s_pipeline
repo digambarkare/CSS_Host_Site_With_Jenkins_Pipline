@@ -33,13 +33,13 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
-            environment {
-                kubeconfigId = 'kubeconfig-credentials-id'
-            }
+         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    kubernetesDeploy( configs: "k8s-onepod.yaml", kubeconfigId )
+                    kubernetesDeploy(
+                        configs: 'k8s-onepod.yaml',
+                        kubeconfigId: 'kubeconfig-credentials-id'
+                    )
                 }
             }
         }
