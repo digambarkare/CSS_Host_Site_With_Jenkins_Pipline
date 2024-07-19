@@ -35,7 +35,7 @@ pipeline {
     steps {
                 script {
                     sh """
-                    kubectl apply -f k8s_onepod.yaml --kubeconfig=/tmp/config --validate=false
+                    kubectl apply -f /var/lib/jenkins/workspace/pipeline/k8s_onepod.yaml --kubeconfig=/tmp/config
                     """
                 }
             }
