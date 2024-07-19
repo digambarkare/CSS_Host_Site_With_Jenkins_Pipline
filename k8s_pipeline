@@ -33,12 +33,11 @@ pipeline {
         }
          stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
                     script {
-                        kubernetesDeploy(configs: "k8s_onepod.yaml", kubeconfigID: "${KUBECONFIG}")
+                        kubernetesDeploy(configs: "k8s_onepod.yaml", kubeconfigID: "kubeconfig-credentials-id")
                     }
                 }
             }
         }
     }
-}
+
