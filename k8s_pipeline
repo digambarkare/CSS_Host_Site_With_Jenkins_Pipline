@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_REPO = 'shan20000/angular'
-        BUILD_TAG = 'latest'
-        }
+                }
     stages {
         stage('Pull Source Code') {
             steps {
@@ -15,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_TAG}")
+                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -26,7 +25,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_TAG}").push()
+                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").push()
                     }
                 }
             }
@@ -40,7 +39,7 @@ pipeline {
                     script {
                         sh """
                     aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
-                    kubectl apply -f k8s_onepod.yaml  --kubeconfig=/tmp/config --validate=false
+                    kubectl apply -f k8s_onepod.yaml  --kubeconfig=/tmp/config 
                     """
                     }
                 }
