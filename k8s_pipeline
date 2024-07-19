@@ -35,9 +35,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
                     script {
-                        sh """
-                        kubectl apply -f k8s_onepod.yaml --kubeconfig=${KUBECONFIG} --validate=false
-                        """
+                        kubernetesDeploy(configs: "k8s_onepod.yaml", kubeconfigID: "${KUBECONFIG}")
                     }
                 }
             }
