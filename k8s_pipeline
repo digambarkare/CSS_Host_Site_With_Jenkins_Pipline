@@ -32,14 +32,15 @@ pipeline {
             }
         }
          stage('Deploy to Kubernetes') {
-    steps {
-                script {
-                    sh """
-                    kubectl apply -f /var/lib/jenkins/workspace/pipeline/k8s_onepod.yaml --kubeconfig=/tmp/config --validate=false
-                    """
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
+                    script {
+                        sh """
+                        kubectl apply -f k8s_onepod.yaml --kubeconfig=${KUBECONFIG} --validate=false
+                        """
+                    }
                 }
             }
         }
     }
 }
-
