@@ -3,8 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_REPO = 'shan20000/angular'
-        BUILD_TAG = "Frontend-pipeline"
-    }
+           }
 
     stages {
         stage('Pull Source Code') {
@@ -16,11 +15,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_TAG}")
+                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}")
                 }
             }
         }
-
         stage('Push Docker Image') {
             environment {
                 registryCredential = 'dockerhub-credentials-id'
@@ -28,37 +26,20 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_TAG}").push()
+                        docker.image("${DOCKERHUB_REPO}:$env.BUILD_NUMBER}").push()
                     }
                 }
             }
         }
          stage('Deploy to Kubernetes') {
     steps {
-        script {
-            // Initialize Kubernetes client
-            def k8s = new io.fabric8.kubernetes.client.DefaultKubernetesClient()
-            echo "Kubernetes client initialized"
-            
-            try {
-                // Read YAML content from file
-                def yamlContent = readFile('k8s_onepod.yaml')
-                
-                // Load YAML content into Kubernetes object
-                def pod = k8s.load(yamlContent).get()
-                echo "Pod object loaded from YAML: ${pod}"
-                
-                // Create or replace the Pod in Kubernetes
-                k8s.pods().createOrReplace(pod)
-                echo "Pod created/replaced successfully"
-                
-            } finally {
-                // Close Kubernetes client
-                k8s.close()
-                echo "Kubernetes client closed"
+                script {
+                    sh """
+                    kubectl set image deployment/k8s_onepod.yaml css-deployment=${DOCKER_IMAGE}:${env.BUILD_NUMBER} --kubeconfig=/root/.kube/config
+                    """
+                }
             }
         }
     }
 }
-}
-}
+
