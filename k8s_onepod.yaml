@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
       - name: css
-        image: shan20000/angular:Frontend-pipeline
+        image: shan20000/angular:latest
         ports:
         - containerPort: 80
 ---
