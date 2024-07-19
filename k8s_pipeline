@@ -35,7 +35,7 @@ pipeline {
     steps {
                 script {
                     sh """
-                    kubectl set image k8s_onepod.yaml --kubeconfig=/tmp/config
+                    kubectl apply -f k8s_onepod.yaml --kubeconfig=/tmp/config
                     """
                 }
             }
