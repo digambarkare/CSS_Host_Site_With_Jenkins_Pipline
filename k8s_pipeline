@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").push(latest)
+                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").push()
                     }
                 }
             }
