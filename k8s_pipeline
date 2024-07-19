@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_REPO = 'shan20000/angular'
+        DOCKERHUB_REPO = 'shan20000/css_template'
                 }
     stages {
         stage('Pull Source Code') {
