@@ -35,7 +35,7 @@ pipeline {
             steps {
                     script {
                         sh """
-                    sudo aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
+                    aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
                     sudo kubectl apply -f /var/lib/jenkins/workspace/pipeline/k8s_onepod.yaml  --kubeconfig=/tmp/config
                     """
                     }
