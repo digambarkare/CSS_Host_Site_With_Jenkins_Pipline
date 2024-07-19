@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: css
-        image: shan20000/angular:${BUILD_NUMBER}
+        image: shan20000/css_template:${BUILD_NUMBER}
         ports:
         - containerPort: 80
 ---
