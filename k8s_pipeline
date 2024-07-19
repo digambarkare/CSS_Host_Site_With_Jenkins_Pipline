@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKERHUB_REPO = 'shan20000/angular'
-           }
-
+        BUILD_TAG = 'Front'
+        }
     stages {
         stage('Pull Source Code') {
             steps {
@@ -15,7 +15,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}")
+                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_TAG}")
                 }
             }
         }
@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                        docker.image("${DOCKERHUB_REPO}:$env.BUILD_NUMBER}").push()
+                        docker.image("${DOCKERHUB_REPO}:$env.BUILD_TAG}").push()
                     }
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
     steps {
                 script {
                     sh """
-                    kubectl set image deployment/k8s_onepod.yaml css-deployment=${DOCKER_IMAGE}:${env.BUILD_NUMBER} --kubeconfig=/root/.kube/config
+                    kubectl set image deployment/k8s_onepod.yaml css-deployment=${DOCKER_IMAGE}:${env.BUILD_TAG} --kubeconfig=/root/.kube/config
                     """
                 }
             }
