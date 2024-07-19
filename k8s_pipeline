@@ -34,8 +34,10 @@ pipeline {
          stage('Deploy to Kubernetes') {
             steps {
                     script {
-                        
-                        kubernetesDeploy(configs: "k8s_onepod.yaml", kubeconfigID: "kubeconfig-credentials-id")
+                        sh """
+                    aws eks update-kubeconfig --name my-cluster --kubeconfig /tmp/config
+                    kubectl set image deployment/deployment css-deployment=${DOCKER_IMAGE}:${env.BUILD_NUMBER} --kubeconfig=/tmp/config
+                    """
                     }
                 }
             }
