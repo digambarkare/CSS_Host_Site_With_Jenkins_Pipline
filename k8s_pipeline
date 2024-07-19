@@ -36,7 +36,7 @@ pipeline {
                     script {
                         sh """
                     sudo aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
-                    sudo kubectl set image deployment/deployment css-deployment=${DOCKER_IMAGE}:${env.BUILD_NUMBER} --kubeconfig=/tmp/config
+                    sudo kubectl apply -f /var/lib/jenkins/workspace/pipeline/k8s_onepod.yaml  --kubeconfig=/tmp/config
                     """
                     }
                 }
