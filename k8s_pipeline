@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_REPO = 'shan20000/angular'
-        BUILD_TAG = 'Front-new'
+        BUILD_TAG = 'Front-newest'
         }
     stages {
         stage('Pull Source Code') {
