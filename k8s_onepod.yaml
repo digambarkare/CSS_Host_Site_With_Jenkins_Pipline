@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
       - name: css
-        image: shan20000/angular:Front
+        image: shan20000/angular:Front-new
         ports:
         - containerPort: 80
 ---
