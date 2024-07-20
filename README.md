@@ -1,10 +1,10 @@
-# Simple pipeline
+# Simple Command pipeline
 ```
 pipeline {
     agent any
 
     environment {
-        DOCKERHUB_REPO = 'sohampatil08/devops-tool-jenkins-pipeline'
+        DOCKERHUB_REPO = 'shan20000/css_template'
     }
 
     stages {
@@ -32,7 +32,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to Kubernetes') {
             environment {
                 AWS_CREDENTIALS = 'aws-creds'
@@ -42,7 +41,7 @@ pipeline {
                     script {
                         sh """
                     aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
-                    kubectl set image deployment/css-deployment docker-jenkins=sohampatil08/devops-tool-jenkins-pipeline:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config 
+                    kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config 
                     """
                     }
                 }
@@ -65,7 +64,6 @@ pipeline {
                 git 'https://github.com/Shantanu20000/CSS_Host_Site_With_Jenkins_Pipline.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -117,7 +115,6 @@ pipeline {
                 git 'https://github.com/Shantanu20000/CSS_Host_Site_With_Jenkins_Pipline.git'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
