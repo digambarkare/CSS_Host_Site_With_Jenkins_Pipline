@@ -49,6 +49,7 @@ pipeline {
     }
 }
 ```
+# To Deploy latest Image with Build Count
 ```
 pipeline {
     agent any
@@ -91,7 +92,7 @@ pipeline {
                     script {
                         sh """
                     aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
-                    kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER} --record --kubeconfig=/tmp/config 
+                    kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
                     """
                     }
                 }
