@@ -1,20 +1,48 @@
 ```
 pipeline {
     agent any
+
+    environment {
+        DOCKERHUB_REPO = 'shan20000/css_template'
+                }
     stages {
-        stage('Pull') {
+        stage('Pull Source Code') {
             steps {
                 git 'https://github.com/Shantanu20000/CSS_Host_Site_With_Jenkins_Pipline.git'
-                echo 'Pull Successfully'
-                sh 'ls'
             }
         }
-        stage('Build Docker image') {
+
+        stage('Build Docker Image') {
             steps {
                 script {
-                    sh '''docker build -t dockerimage .
-                          docker run -itd -p 80:80 dockerimage'''
-                    echo 'Build Successfully'
+                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            environment {
+                registryCredential = 'dockerhub-credentials-id'
+            }
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").push()
+                    }
+                }
+            }
+        }
+         stage('Deploy to Kubernetes') {
+            environment {
+                AWS_CREDENTIALS = 'awscred'
+            }
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDENTIALS]]) {
+                    script {
+                        sh """
+                    aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
+                    kubectl apply -f k8s_onepod.yaml  --kubeconfig=/tmp/config 
+                    """
+                    }
                 }
             }
         }
