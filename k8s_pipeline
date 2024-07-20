@@ -18,6 +18,13 @@ pipeline {
                 }
             }
         }
+        stage('Tag Docker Image') {
+            steps {
+                script {
+                    docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").tagLatest()
+                }
+            }
+        }
         stage('Push Docker Image') {
             environment {
                 registryCredential = 'dockerhub-credentials-id'
@@ -26,6 +33,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
                         docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").push()
+                        docker.image("${DOCKERHUB_REPO}:latest").push()
                     }
                 }
             }
