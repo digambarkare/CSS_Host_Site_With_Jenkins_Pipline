@@ -15,7 +15,7 @@ spec:
       containers:
       - name: css
         imagePullPolicy: Always
-        image: shan20000/css_template
+        image: shan20000/css_template:latest
         ports:
         - containerPort: 80
 ---
