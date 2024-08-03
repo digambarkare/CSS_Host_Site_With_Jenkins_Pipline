@@ -149,7 +149,7 @@ spec:
     spec: 
       containers:
       - name: docker-jenkins
-        image: sohampatil08/devops-tool-jenkins-pipeline      #DockerHub_Image
+        image: shan20000/css_template      #DockerHub_Image
         ports:
         - containerPort: 80
           protocol: TCP
@@ -173,18 +173,18 @@ spec:
 ```shell
 vim devops-tool-pipeline
 ```
-```shell
+```
 pipeline {
     agent any
 
     environment {
-        DOCKERHUB_REPO = '<sohampatil08/devops-tool-jenkins-pipeline>'     #Mention your Dockerhub_Repository
+        DOCKERHUB_REPO = 'shan20000/css_template'
     }
 
     stages {
         stage('Pull Source Code') {
             steps {
-                git 'https://github.com/soham08022001/DevopsTool-Jenkins-Integration.git'    #Mention your Github_Repository
+                git 'https://github.com/Shantanu20000/CSS_Host_Site_With_Jenkins_Pipline.git'
             }
         }
 
@@ -196,7 +196,7 @@ pipeline {
 
         stage('Push Docker Image') {
             environment {
-                registryCredential = 'docker-creds'    #Mention docker-credential NAME here which you've created in JENKINS-credentials
+                registryCredential = 'docker-creds'
             }
             steps {
                 script {
@@ -206,10 +206,9 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to Kubernetes') {
             environment {
-                AWS_CREDENTIALS = 'aws-creds'      #Mention AWS-credential NAME here which you've created in JENKINS-credentials
+                AWS_CREDENTIALS = 'aws-creds'
             }
             steps {
                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDENTIALS]]) {
@@ -217,7 +216,7 @@ pipeline {
                         sh """
                     aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
                     kubectl apply -f k8s-pipeline.yml  --kubeconfig=/tmp/config
-                    kubectl set image deployment/css-deployment docker-jenkins=sohampatil08/devops-tool-jenkins-pipeline:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
+                    kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
                     """
                     }
                 }
@@ -295,58 +294,8 @@ pipeline {
                     script {
                         sh """
                     aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
-                    kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config 
-                    """
-                    }
-                }
-            }
-        }
-    }
-}
-```
-# Advance Pipeline
-```
-pipeline {
-    agent any
-
-    environment {
-        DOCKERHUB_REPO = 'shan20000/css_template'
-                }
-    stages {
-        stage('Pull Source Code') {
-            steps {
-                git 'https://github.com/Shantanu20000/CSS_Host_Site_With_Jenkins_Pipline.git'
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}")
-                }
-            }
-        }
-        stage('Push Docker Image') {
-            environment {
-                registryCredential = 'dockerhub-credentials-id'
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_NUMBER}").push()
-                    }
-                }
-            }
-        }
-         stage('Deploy to Kubernetes') {
-            environment {
-                AWS_CREDENTIALS = 'awscred'
-            }
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: AWS_CREDENTIALS]]) {
-                    script {
-                        sh """
-                    aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
-                    kubectl apply -f k8s_onepod.yaml  --kubeconfig=/tmp/config 
+                    kubectl apply -f k8s-pipeline.yml  --kubeconfig=/tmp/config
+                    kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
                     """
                     }
                 }
