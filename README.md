@@ -346,6 +346,7 @@ pipeline {
                     script {
                         sh """
                     aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
+                    kubectl apply -f k8s-pipeline.yml  --kubeconfig=/tmp/config
                     kubectl set image deployment/css-deployment css=shan20000/css_template:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
                     """
                     }
