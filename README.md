@@ -229,13 +229,19 @@ pipeline {
 ### Last stage of pipeline explained here:
 #### stage('Deploy to Kubernetes') > script {sh""" -//- """}
 ######  Mention your Cluster_Name at my-cluster & Region at ap-south-1
-#### aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
+```
+aws eks update-kubeconfig --name my-cluster --region ap-south-1 --kubeconfig /tmp/config
+```
 #
 ###### Mention your YAML_file name at k8s-pipeline.yml
-#### kubectl apply -f k8s-pipeline.yml  --kubeconfig=/tmp/config
+```
+kubectl apply -f k8s-pipeline.yml  --kubeconfig=/tmp/config
+```
 #
 ###### kubectl set image deployment/<Deployment_Name> <Container_Name>=<DockerHub_Repository>:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
-#### kubectl set image deployment/css-deployment docker-jenkins=sohampatil08/devops-tool-jenkins-pipeline:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
+```
+kubectl set image deployment/css-deployment docker-jenkins=sohampatil08/devops-tool-jenkins-pipeline:${env.BUILD_NUMBER}  --kubeconfig=/tmp/config
+```
 This command updates the docker-jenkins container image in the <css-deployment> deployment to a specific version of the <sohampatil08/devops-tool-jenkins-pipeline> image, determined by the build number from a CI/CD pipeline, using a specific kubeconfig file to connect to the cluster.
 #
 ## Create Job on jenkins server (GUI)
@@ -244,15 +250,8 @@ This command updates the docker-jenkins container image in the <css-deployment> 
 ###### SAVE & APPLY
 ### After successfully uploaded all the files on GitHub Repository, and created job/item on jenkins GUI, 
 #### Hit the > Build Now
-## You will get result of Build stages:
-![Build stage Result](result-images/build-stages.png)
-#
-## Get the DNS of LoadBalancer from jenkins Terminal/EC2(LoadBalancer):
-![COPY DNS of LB](result-images/LoadBalancer-DNS.png)
-#
-## Hit the DNS on Browser to watch Deployed Application:
-![Final Result of Deployed CSS Template](result-images/DevOps-pipeline-result.png)
 #### THANK YOU
+
 # Simple Command pipeline
 ```
 pipeline {
