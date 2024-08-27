@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_REPO = 'shan20000/css_template'
+        DOCKERHUB_REPO = 'digambarkare/k8s'
     }
 
     stages {
         stage('Pull Source Code') {
             steps {
-                git 'https://github.com/Shantanu20000/CSS_Host_Site_With_Jenkins_Pipline.git'
+                git 'https://github.com/digambarkare/CSS_Host_Site_With_Jenkins_Pipline.git'
             }
         }
 
